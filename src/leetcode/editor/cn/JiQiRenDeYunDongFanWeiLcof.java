@@ -26,14 +26,62 @@
 
   
 package leetcode.editor.cn;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class JiQiRenDeYunDongFanWeiLcof{
       public static void main(String[] args) {
            Solution solution = new JiQiRenDeYunDongFanWeiLcof().new Solution();
+          System.out.println(solution.movingCount(3,1,0));
       }
       //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int movingCount(int m, int n, int k) {
-        return 0;
+        int[][] bias = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        boolean[][] vis = new boolean[m][n];
+        int cnt = 0;
+        Queue<Coordinate> q = new LinkedList<>();
+        for(boolean[] row: vis) Arrays.fill(row, false);
+
+        vis[0][0] = true;
+        q.add(new Coordinate(0, 0));
+        Coordinate crt;
+        while (!q.isEmpty()) {
+            crt = q.poll();
+            if (calSum(crt.x) + calSum(crt.y) <= k) {
+                ++cnt;
+                for (int i = 0; i < 4; i++) {
+                    int x = crt.x + bias[i][0];
+                    int y = crt.y + bias[i][1];
+                    if (x >= 0 && x < m && y >= 0 && y < n) {
+                        if (!vis[x][y]) {
+                            vis[x][y] = true;
+                            q.add(new Coordinate(x, y));
+                        }
+                    }
+                }
+            }
+        }
+        return cnt;
+    }
+
+    private int calSum(int n) {
+        int sum = 0;
+        while (n != 0) {
+            sum += n%10;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    class Coordinate {
+        int x, y;
+        public Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
